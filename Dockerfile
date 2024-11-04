@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11.10-slim
 LABEL org.opencontainers.image.source=https://github.com/hardbyte/netchecks
 
 # Configure Poetry
