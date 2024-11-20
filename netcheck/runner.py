@@ -29,7 +29,7 @@ def run_from_config(
         "type": "netcheck-output",
         "outputVersion": OUTPUT_JSON_VERSION,
         "metadata": {
-            "creationTimestamp": datetime.datetime.utcnow().isoformat(),
+            "creationTimestamp": datetime.datetime.now(datetime.UTC).isoformat(),
             "version": NETCHECK_VERSION,
         },
         "assertions": [],

@@ -61,7 +61,7 @@ def dns_lookup_check(host, server, timeout=10):
         "host": host,
         "timeout": timeout,
     }
-    startTimestamp = datetime.datetime.utcnow().isoformat()
+    startTimestamp = datetime.datetime.now(datetime.UTC).isoformat()
 
     try:
         result_data = get_A_records_by_dns_lookup(host, nameserver=server, timeout=timeout)
@@ -71,7 +71,7 @@ def dns_lookup_check(host, server, timeout=10):
         raise
 
     result_data["startTimestamp"] = startTimestamp
-    result_data["endTimestamp"] = datetime.datetime.utcnow().isoformat()
+    result_data["endTimestamp"] = datetime.datetime.now(datetime.UTC).isoformat()
 
     output = {"spec": test_spec, "data": result_data}
     return output

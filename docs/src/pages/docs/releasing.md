@@ -7,7 +7,7 @@ description: How to release a new version of Netchecks
 
 Netchecks is released via GitHub Actions. To make a release
 
-- Update `version` in both `pyproject.toml` and `operator/pyproject.toml`. Ensure both versions match
+- Update `version` in both `pyproject.toml` and `operator/pyproject.toml`. Ensure both versions match.
 - Update `version` in `operator/charts/netchecks/Chart.yaml`
 - Update `appVersion` in `operator/charts/netchecks/Chart.yaml`. Ensure this matches the `version` in the aforementioned `pyproject.toml` files.
 - Update `version` in `operator/charts/netchecks/Chart.yaml`.

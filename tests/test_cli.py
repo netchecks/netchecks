@@ -10,7 +10,7 @@ runner = CliRunner(mix_stderr=False)
 
 
 # To write the stderr and stdout to separate files use:
-# poetry run netcheck http -v 2> errlog > stdout
+# uv run netcheck http -v 2> errlog > stdout
 
 
 def test_invalid_command():
