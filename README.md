@@ -254,19 +254,10 @@ Kubernetes operator to inject data.
 Update version in `pyproject.toml`, push to `main` and create a release on GitHub. Pypi release will be carried
 out by GitHub actions. 
 
-Install dev dependencies with Poetry:
+Install dev dependencies with `uv`:
 
 ```shell
-poetry install --with dev
-```
-
-### Manual Release 
-To release manually, use Poetry:
-
-```shell
-poetry version patch
-poetry build
-poetry publish
+uv sync
 ```
 
 ### Testing
@@ -274,5 +265,5 @@ poetry publish
 Pytest is used for testing. 
 
 ```shell
-poetry run pytest
+uv run pytest
 ```

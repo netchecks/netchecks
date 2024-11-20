@@ -82,8 +82,6 @@ class LazyFileLoadingDict(dict):
         # Pre-populate the dictionary with keys for each file in the directory
         for filename in os.listdir(directory):
             # We'll use None as a placeholder for the file contents
-            # We could strip filename extensions, but I think it is clearer not to
-            # os.path.splitext(filename)[0]
             self[filename] = None
 
     def __getitem__(self, key):
@@ -96,5 +94,5 @@ class LazyFileLoadingDict(dict):
 
     def items(self):
         # Override items() to call __getitem__ for each key
-        # Required because CEL calls items() when converting to CEL Map type.
         return [(key, self[key]) for key in self]
+
