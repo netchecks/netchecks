@@ -20,37 +20,29 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-13]
-        python: ["3.10", "3.11"]
+        python: ["3.11", "3.12"]
       fail-fast: true
     env:
       OS: ${{ matrix.os }}
       PYTHON: ${{ matrix.python }}
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python }}
+      - name: Install uv
+        id: setup-uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          enable-cache: 'true'
+
+      - name: Install Python ${{ matrix.python }}
         id: setup-python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python }}
-      - name: Install poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      - name: Install dependencies
-        run: |
-          poetry install --no-interaction
+        run: uv python install ${{ matrix.python }}
+
+      - name: Sync Dependencies
+        run: uv sync --frozen --no-dev
+
       - name: Run Tests
         run: |
-          source $VENV
-          poetry run pytest tests --cov netcheck --cov-report=lcov --cov-report=term
+          uv run pytest tests --cov netcheck --cov-report=lcov --cov-report=term
         timeout-minutes: 10
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
@@ -76,32 +68,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        id: setup-python
-        uses: actions/setup-python@v4
+
+      - name: Install uv
+        id: setup-uv
+        uses: astral-sh/setup-uv@v2
         with:
-          python-version: "3.11"
-      - name: Install poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      # install dependencies if cache does not exist
-      - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: |
-          poetry install --no-interaction --no-root
+          enable-cache: true
+
+      - name: Install Python
+        run: uv python install 3.12
+
+      - name: Sync dependencies
+        run: uv sync --frozen --no-dev
+
       - name: Artifact creation
-        run: |
-          source $VENV
-          poetry build
+        run: uv build
+
       - name: Save artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -237,7 +219,7 @@ jobs:
       LOG_TIME: 30m
       cilium_version: 1.14.3
       cilium_cli_version: v0.15.11
-      kubectl_version: v1.25.2
+      kubectl_version: v1.26.3
       PROBE_IMAGE_NAME: netchecks
       OPERATOR_IMAGE_NAME: netchecks-operator
       IMAGE_REGISTRY: ghcr.io
@@ -249,7 +231,7 @@ jobs:
         id: setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.12"
       - name: Install poetry
         uses: snok/install-poetry@v1
         with:
@@ -285,7 +267,7 @@ jobs:
           curl -LO https://raw.githubusercontent.com/cilium/cilium/1.14.3/Documentation/installation/kind-config.yaml
 
       - name: Create kind cluster
-        uses: helm/kind-action@v1.9.0
+        uses: helm/kind-action@v1
         with:
           version: ${{ env.KIND_VERSION }}
           cluster_name: kind
@@ -327,7 +309,7 @@ jobs:
         run: |
           cd operator
           export NETCHECKS_IMAGE_TAG=sha-${GITHUB_SHA::7}
-          poetry run pytest
+          poetry run pytest -v -x
         timeout-minutes: 10
 
       #      - name: Enable Hubble Relay

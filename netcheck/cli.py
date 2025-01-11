@@ -99,10 +99,11 @@ def http(
 ):
     """Carry out a http network check"""
     parsed_headers = {}
-    for h in headers:
-        if ":" in h:
-            key, value = h.split(":")
-            parsed_headers[key.strip()] = value.strip()
+    if headers:
+        for h in headers:
+            if ":" in h:
+                key, value = h.split(":")
+                parsed_headers[key.strip()] = value.strip()
 
     test_config = {
         "url": url,

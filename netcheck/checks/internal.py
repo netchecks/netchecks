@@ -12,11 +12,11 @@ def internal_check(
     }
 
     result_data = {
-        "startTimestamp": datetime.datetime.utcnow().isoformat(),
+        "startTimestamp": datetime.datetime.now(datetime.UTC).isoformat(),
     }
 
     output = {"spec": test_spec, "data": result_data}
 
-    result_data["endTimestamp"] = datetime.datetime.utcnow().isoformat()
+    result_data["endTimestamp"] = datetime.datetime.now(datetime.UTC).isoformat()
 
     return output
