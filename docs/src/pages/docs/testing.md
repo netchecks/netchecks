@@ -9,5 +9,5 @@ Both the Netchecks command line tool and Kubernetes operator have comprehensive 
 ## Testing the Netchecks Python Library
 
 ```bash
-poetry run pytest
+uv run pytest
 ```

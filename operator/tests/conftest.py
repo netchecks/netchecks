@@ -83,10 +83,24 @@ def netchecks(k8s_namespace):
             shell=True,
             check=True,
         )
+        startup_log_output = subprocess.run(
+            f"kubectl logs Deployment/netchecks-operator -n {k8s_namespace}",
+            shell=True,
+            capture_output=True,
+        )
+        print(startup_log_output.stdout.decode())
 
         yield None
 
     finally:
+        print("Logs from netchecks-operator")
+        operator_log_output = subprocess.run(
+            f"kubectl logs Deployment/netchecks-operator -n {k8s_namespace}",
+            shell=True,
+            capture_output=True,
+        )
+        print(operator_log_output.stdout.decode())
+
         print("Uninstalling netchecks-operator")
         try:
             subprocess.run(
